@@ -30,15 +30,17 @@ function findName (name, callback){
   });
 };
 
-findName(arg, function(err, result) {
-
-  //This is all data formating
-  console.log(`Searching ... \n Found ${result.length} by the name '${arg}' :`)
-  result.forEach(function(result) {
+function formatResults(data) {
+  console.log(`Searching ... \n Found ${data.length} by the name '${arg}' :`)
+  data.forEach(function(result, index) {
     let dobstring = result.birthdate.toString()
     let dob = dobstring.slice(4,16)
-    console.log(`- ${result.id} : ${result.first_name} ${result.last_name}, born ${dob}` )
+    console.log(`- ${index+1} : ${result.first_name} ${result.last_name}, born ${dob}` )
   })
+}
+
+findName(arg, function(err, result) {
+  formatResults(result)
   client.end()
 })
 
