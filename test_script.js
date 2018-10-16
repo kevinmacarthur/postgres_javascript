@@ -11,16 +11,36 @@ const client = new pg.Client({
   ssl      : settings.ssl
 });
 
+
 // console.log(client)
 client.connect((err) => {
   if (err) {
     return console.error("Connection Error", err);
   }
-  client.query(`SELECT * from famous_people where first_name=$1::text OR last_name=$1::text`, [arg], (err, result) => {
-    if (err) {
-      return console.error("error running query", err);
-    }
-    console.log(result.rows); //output: 1
-    client.end();
-  });
 });
+
+
+function findName (name, callback){
+  client.query(`SELECT * from famous_people where first_name=$1::text OR last_name=$1::text`, [name], (err, result) => {
+    if (err) {
+      return console.error("Something went wrong", err);
+    } else {
+      callback(err, result.rows)
+    }
+  });
+};
+
+findName(arg, function(err, result) {
+
+  //This is all data formating
+  console.log(`Searching ... \n Found ${result.length} by the name '${arg}' :`)
+  result.forEach(function(result) {
+    let dobstring = result.birthdate.toString()
+    let dob = dobstring.slice(4,16)
+    console.log(`- ${result.id} : ${result.first_name} ${result.last_name}, born ${dob}` )
+  })
+  client.end()
+})
+
+
+
