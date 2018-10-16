@@ -4,7 +4,7 @@ const settings = require("./settings");
 module.exports = {
 
   development: {
-    client: 'pg',
+   client: 'pg',
     connection: {
       user     : settings.user,
       password : settings.password,
